@@ -26,6 +26,10 @@ ai-mind-clone/
 
 ## Local development
 
+Free hosting preparation now supports PostgreSQL and private owner sign-in;
+SQLite remains the local default. See [free hosting](docs/free-hosting.md) for
+deployment configuration and outstanding release checks. Hosting is not live.
+
 ### Backend
 
 ```bash

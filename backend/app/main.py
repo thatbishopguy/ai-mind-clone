@@ -1,11 +1,12 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.decisions import router as decisions_router
 from app.api.health import router as health_router
+from app.core.auth import owner_access
 from app.core.config import Settings, get_settings
 from app.providers.reasoning import OpenAIReasoning
 from app.repositories.decisions import DecisionRepository
@@ -28,6 +29,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         version="0.5.0",
         description="Decision Engine and Mind Model API",
         lifespan=lifespan,
+        dependencies=[Depends(owner_access(settings))],
+        docs_url=None if settings.app_env == "production" else "/docs",
+        redoc_url=None if settings.app_env == "production" else "/redoc",
+        openapi_url=None if settings.app_env == "production" else "/openapi.json",
     )
     app.add_middleware(
         CORSMiddleware,
